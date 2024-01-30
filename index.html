@@ -7,6 +7,7 @@
     <title>Memory Game</title>
 </head>
 <body>
+    <div class="score">Score: <span id="score"></span></div>
     <div class="block_container">
         <div class="block">
             <div class="block_inner" onclick="rotateBlock(this)">
@@ -81,6 +82,7 @@
             </div>
         </div>
     </div>
+    <button id="reset_game" onclick="reset()">Reset</button>
 </body>
 <script src="scripts/main.js" type="text/javascript"></script>
 </html>
