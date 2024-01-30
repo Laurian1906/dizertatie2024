@@ -8,7 +8,7 @@ var blockInnerElements = document.getElementsByClassName("block_inner");
 // flippedCard represents the element of a card faced up
 var flippedCard = null;
 
-// counter counts the score
+// gameScore counts the score
 var gameScore = 0;
 
 // A span holding the score
@@ -26,12 +26,12 @@ function rotateBlock(element) {
     console.log(elementID);
     console.log(typeof(elementID));
 
-    // Step 4: Memorize the flipped card in an object AND
+    // Step 4: Memorize the flipped card in an object
     
     if (!flippedCard){
         flippedCard = {
             id: elementID, // id of the card
-            element: element, // the element of the card, we need this for later
+            element: element, // the element of the card
             isCopy: elementID.includes("original") ? false : true, // check if is copy
             isOriginal: elementID.includes("copy") ? false : true // check if is original
         }
@@ -42,18 +42,25 @@ function rotateBlock(element) {
     else{
         // If the second card is identical with first card
 
+        // Splitting the name of the card and its type:
+        // for example: cat-original will be splitted in an array [cat, original]
+        // selecting the first element of this array which is the animal
         var flippedCardAnimal = flippedCard.id.split('-')[0];
         var elementCardAnimal = elementID.split('-')[0];
 
+        // Then it is comparing the two obtained strings
         if(flippedCardAnimal === elementCardAnimal){
             console.log("Cards are identical!");
 
+            // Set flipped card to null
             if(flippedCard){
                 flippedCard = null;
             }
 
+            // Update the score
             gameScore++;
-            console.log(gameScore);
+            
+            // Show the score in the page
             score.innerHTML = gameScore;
 
         }
@@ -61,31 +68,38 @@ function rotateBlock(element) {
         else{
             console.log("Cards are not identical!");
 
+            // This function will turn the cards facing off after 1 second.
             setTimeout(function(){
                 element.style.transform = 'rotateY(0deg)';
-                console.log("Element: ");
-                console.log(element);
                 flippedCard.element.style.transform = 'rotateY(0deg)';
-                console.log("Element of flipped card: ");
-                console.log(flippedCard);
-
                 flippedCard = null;
             }, 1000);   
         }   
     }
 }
 
+// This function will shuffle the cards
 function shuffleCards() {
+
+    // Declaring the container of the blocks ( cards )
     var container = document.querySelector('.block_container');
+    
+    // The cards are converted from NodeList to an Array
     var cards = Array.from(container.getElementsByClassName('block'));
 
+    // This loop will iterate backwards from the last to the first element of the array
+    // it is called the Knuth Shuffle
     for (var i = cards.length - 1; i > 0; i--) {
+        
+        // Initializing the j variable with a random number between 0 and variable i
         var j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]]; // Swap între elementele alese aleatoriu și elementul curent
+        [cards[i], cards[j]] = [cards[j], cards[i]]; // swap the current element with another random element from the array
     }
 
-    // Reatașează elementele amestecate la container
-    container.innerHTML = ''; // Golește containerul
+    
+    container.innerHTML = ''; // get the container empty
+
+    // Append the elements to the container
     cards.forEach(function(card) {
         container.appendChild(card);
     });
@@ -94,16 +108,21 @@ function shuffleCards() {
 // This function resets the game
 function reset(){
 
+    // Iterating through blockInnerElements
+    // then rotating them to their initial position ( facing off )
     for (element of blockInnerElements){
         element.style.transform = 'rotateY(0deg)'
     }
 
+    // Reseting this variables
     flippedCard = null;
     gameScore = null;
     score.innerHTML = 0;
 
+    // Calling the shuffleCards() method
     shuffleCards();
 
 }
 
+// Shuffle the cards again when the page loads.
 shuffleCards();
