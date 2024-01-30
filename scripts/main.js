@@ -31,7 +31,11 @@ function rotateBlock(element) {
     }
     else{
         // If the second card is identical with first card
-        if(elementID === flippedCard.id){
+
+        elementCardAnimal = elementID.split('-')[0];
+        flippedCardAnimal = flippedCard.id.split('-')[0];
+
+        if(elementCardAnimal === flippedCardAnimal){
             console.log("Cards are identical!");
         }
         // If they are not then turn them facing off.
