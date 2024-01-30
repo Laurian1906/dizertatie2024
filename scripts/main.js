@@ -14,6 +14,20 @@ var gameScore = 0;
 // A span holding the score
 var score = document.getElementById("score")
 
+// A boolean marking cardFacedUp or not.
+var cardFacedUp = false;
+
+// Count pairs
+var countPairs = 0;
+
+// This variable counts all the blocks ( cards )
+var countBlocks = 0;
+
+// This loop will itereate through blockInnerElements and will update countBlocks
+for ( let c = 1; c < blockInnerElements.length + 1; c++ ){
+    countBlocks = c;
+}
+
 // Step 2: Rotating the object
 function rotateBlock(element) {
     // Rotate the card
@@ -33,7 +47,7 @@ function rotateBlock(element) {
             id: elementID, // id of the card
             element: element, // the element of the card
             isCopy: elementID.includes("original") ? false : true, // check if is copy
-            isOriginal: elementID.includes("copy") ? false : true // check if is original
+            isOriginal: elementID.includes("copy") ? false : true, // check if is original
         }
 
         console.log("First Card is faced up: ", flippedCard);
@@ -51,11 +65,15 @@ function rotateBlock(element) {
         // Then it is comparing the two obtained strings
         if(flippedCardAnimal === elementCardAnimal){
             console.log("Cards are identical!");
-
+            cardFacedUp = true;
+            
             // Set flipped card to null
             if(flippedCard){
                 flippedCard = null;
             }
+
+            // Update de pairs counted.
+            countPairs++;
 
             // Update the score
             gameScore++;
@@ -70,14 +88,18 @@ function rotateBlock(element) {
 
             // This function will turn the cards facing off after 1 second.
             setTimeout(function(){
+                canClick = true;
+                cardFacedUp = false;
                 element.style.transform = 'rotateY(0deg)';
                 flippedCard.element.style.transform = 'rotateY(0deg)';
                 flippedCard = null;
             }, 1000);   
         }   
     }
+    endGame();
 }
 
+// Step 6:
 // This function will shuffle the cards
 function shuffleCards() {
 
@@ -105,19 +127,22 @@ function shuffleCards() {
     });
 }
 
+// Step 7:
 // This function resets the game
 function reset(){
 
     // Iterating through blockInnerElements
     // then rotating them to their initial position ( facing off )
     for (element of blockInnerElements){
-        element.style.transform = 'rotateY(0deg)'
+        element.style.transform = 'rotateY(0deg)';
+        element.style.pointerEvents = "auto";
     }
 
     // Reseting this variables
     flippedCard = null;
     gameScore = null;
     score.innerHTML = 0;
+    congrats.innerHTML = "";
 
     // Calling the shuffleCards() method
     shuffleCards();
@@ -126,3 +151,17 @@ function reset(){
 
 // Shuffle the cards again when the page loads.
 shuffleCards();
+
+// Step 8: Congratulate the player if he guesses all the pairs
+
+function endGame(){
+    if(cardFacedUp == true && gameScore === countPairs && gameScore == countBlocks/2){
+        congrats.innerHTML = "Congratulations! Press reset to play again!"
+    }
+    else{
+        console.log("Game is running. Play more!")
+    }
+}
+
+
+
